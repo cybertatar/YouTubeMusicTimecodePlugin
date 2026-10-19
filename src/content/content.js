@@ -156,6 +156,7 @@
   function setVideo(videoId, duration) {
     if (duration > 0) state.duration = duration;
     if (!videoId || videoId === state.videoId) return;
+    noteLoopInterrupted();
     state.videoId = videoId;
     state.results = [];
     state.selected = 0;
@@ -198,6 +199,7 @@
     }
     state.current = -1;
     state.loop = -1;
+    resumeInterruptedLoop();
     tick();
     render();
   }
@@ -458,14 +460,31 @@
   // Seeks issued by the loop take a moment to land; don't mistake the old
   // position for the user jumping elsewhere.
   let loopSeekUntil = 0;
+  // YouTube Music moves to the next video as soon as one ends, so a repeated
+  // last track jumps back this many seconds before the end.
+  const END_MARGIN = 3;
+  // Snapshot taken whenever the repeated last track is seen near its end.
+  let lastTrackEnd = null; // {at, videoId, selected, loop, start}
+
+  // "1:23 / 2:02:09" in the player bar: available even without the bridge.
+  function playerBarDuration() {
+    const el = document.querySelector('ytmusic-player-bar .time-info');
+    const m = el && el.textContent.match(/\/\s*([\d:]+)/);
+    return m ? globalThis.YTMTC.parseTime(m[1]) : NaN;
+  }
+
+  // The player can end a video slightly before its media file does, so take
+  // the earliest of the lengths we know.
+  function videoDuration() {
+    const v = videoEl();
+    const known = [state.duration, v && v.duration, playerBarDuration()].filter((d) => Number.isFinite(d) && d > 0);
+    return known.length ? Math.min(...known) : Infinity;
+  }
 
   function trackBounds(i) {
     const list = entries();
-    const v = videoEl();
-    const duration = state.duration || (v && v.duration) || Infinity;
-    // Stop short of the very end, otherwise YouTube Music moves to the next video.
-    const end = i + 1 < list.length ? list[i + 1].t : duration - 1.5;
-    return { start: list[i].t, end };
+    const next = i + 1 < list.length ? list[i + 1].t : Infinity;
+    return { start: list[i].t, end: Math.min(next, videoDuration() - END_MARGIN), last: i + 1 >= list.length };
   }
 
   function playTrack(i) {
@@ -488,20 +507,69 @@
     if (!v || v.currentTime < start - 0.5 || v.currentTime >= end) playTrack(i);
   }
 
+  function jumpBack(v, start) {
+    // Set the position right away (this may run inside a "seeking" event,
+    // before the video gets a chance to end), then let the player API settle it.
+    v.currentTime = start;
+    if (state.bridgeSeen) seek(start);
+    loopSeekUntil = Date.now() + 1500;
+  }
+
   function checkLoop(v) {
-    if (state.loop < 0 || !v || !entries()[state.loop]) return;
-    const { start, end } = trackBounds(state.loop);
+    if (!v || state.loop < 0 || !entries()[state.loop]) return;
+    const { start, end, last } = trackBounds(state.loop);
     const now = v.currentTime;
-    if (now >= end - 0.3 && now < end + 3) {
-      seek(start);
-      loopSeekUntil = Date.now() + 1500;
+    if (last && now >= end - 1) {
+      lastTrackEnd = { at: Date.now(), videoId: state.videoId, selected: state.selected, loop: state.loop, start };
+    }
+    if (now >= end - 0.3 && (last || now < end + 3)) {
+      jumpBack(v, start);
     } else if (Date.now() > loopSeekUntil && (now < start - 1.5 || now >= end + 3)) {
       setLoop(-1); // The user jumped elsewhere with the progress bar.
     }
   }
 
+  // Timers can lag, so also react to the video's own events.
+  let watchedVideo = null;
+  function watchVideo(v) {
+    if (!v || v === watchedVideo) return;
+    watchedVideo = v;
+    const check = () => checkLoop(v);
+    v.addEventListener('timeupdate', check);
+    v.addEventListener('seeking', check);
+    v.addEventListener('ended', check);
+  }
+
+  // Last resort: if the repeated last track still ran into the end and YouTube
+  // Music switched videos, go back with the "previous" button and resume.
+  let interrupted = null;
+
+  function noteLoopInterrupted() {
+    // Only right after the track reached its end; pressing "next" mid-track is a choice.
+    // (The loop itself may already be off: the switch resets the position first.)
+    const snap = lastTrackEnd;
+    lastTrackEnd = null;
+    if (!snap || snap.videoId !== state.videoId || Date.now() - snap.at > 3000) return;
+    const prev = document.querySelector('ytmusic-player-bar .previous-button');
+    if (!prev) return;
+    interrupted = { ...snap, until: Date.now() + 15000 };
+    prev.click();
+  }
+
+  function resumeInterruptedLoop() {
+    const r = interrupted;
+    if (!r || Date.now() > r.until || r.videoId !== state.videoId) return;
+    interrupted = null;
+    if (!state.results[r.selected]) return;
+    state.selected = r.selected;
+    setLoop(r.loop);
+    seek(r.start);
+    loopSeekUntil = Date.now() + 1500;
+  }
+
   function tick() {
     const v = videoEl();
+    watchVideo(v);
     checkLoop(v);
     const list = entries();
     let idx = -1;
