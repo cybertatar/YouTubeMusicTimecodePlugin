@@ -1,19 +1,79 @@
 {
-  "extName": { "message": "YouTube Music Timecodes" },
-  "extDescription": { "message": "Shows song timecodes for concerts and long videos in YouTube Music, taken from the description, chapters and comments." },
-  "buttonLabel": { "message": "Timecodes" },
-  "panelTitle": { "message": "Timecodes" },
-  "loading": { "message": "Looking for timecodes…" },
-  "notFound": { "message": "No timecodes found in the description or top comments." },
-  "noVideo": { "message": "Play something to see its timecodes." },
-  "error": { "message": "Could not load timecodes: $ERR$", "placeholders": { "err": { "content": "$1" } } },
-  "retry": { "message": "Try again" },
-  "refresh": { "message": "Reload" },
-  "close": { "message": "Close" },
-  "source": { "message": "Source" },
-  "sourceChapters": { "message": "Video chapters" },
-  "sourceDescription": { "message": "Video description" },
-  "sourceComment": { "message": "Comment by $AUTHOR$", "placeholders": { "author": { "content": "$1" } } },
-  "likes": { "message": "$N$ likes", "placeholders": { "n": { "content": "$1" } } },
-  "tracks": { "message": "$N$ tracks", "placeholders": { "n": { "content": "$1" } } }
+  "extName": {
+    "message": "YouTube Music Timecodes"
+  },
+  "extDescription": {
+    "message": "Shows song timecodes for concerts and long videos in YouTube Music, taken from the description, chapters and comments."
+  },
+  "buttonLabel": {
+    "message": "Timecodes"
+  },
+  "panelTitle": {
+    "message": "Timecodes"
+  },
+  "loading": {
+    "message": "Looking for timecodes…"
+  },
+  "notFound": {
+    "message": "No timecodes found in the description or top comments."
+  },
+  "noVideo": {
+    "message": "Play something to see its timecodes."
+  },
+  "error": {
+    "message": "Could not load timecodes: $ERR$",
+    "placeholders": {
+      "err": {
+        "content": "$1"
+      }
+    }
+  },
+  "retry": {
+    "message": "Try again"
+  },
+  "refresh": {
+    "message": "Reload"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "source": {
+    "message": "Source"
+  },
+  "sourceChapters": {
+    "message": "Video chapters"
+  },
+  "sourceDescription": {
+    "message": "Video description"
+  },
+  "sourceComment": {
+    "message": "Comment by $AUTHOR$",
+    "placeholders": {
+      "author": {
+        "content": "$1"
+      }
+    }
+  },
+  "likes": {
+    "message": "$N$ likes",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "tracks": {
+    "message": "$N$ tracks",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "loopOn": {
+    "message": "Repeat this track"
+  },
+  "loopOff": {
+    "message": "Stop repeating"
+  }
 }

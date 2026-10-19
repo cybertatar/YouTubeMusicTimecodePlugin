@@ -23,6 +23,8 @@
     sourceChapters: 'Video chapters',
     sourceDescription: 'Video description',
     sourceComment: 'Comment by $1',
+    loopOn: 'Repeat this track',
+    loopOff: 'Stop repeating',
     likes: '$1 likes',
     tracks: '$1 tracks',
   };
@@ -65,6 +67,7 @@
   const ICONS = {
     list: 'M3 5h2v2H3V5zm4 0h10v2H7V5zM3 11h2v2H3v-2zm4 0h6v2H7v-2zm-4 6h2v2H3v-2zm4 0h6v2H7v-2zm10.5-6a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm-.75 2v2.81l2.1 1.26.77-1.28-1.37-.82V13h-1.5z',
     close: 'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+    repeatOne: 'M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z',
     refresh: 'M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z',
   };
 
@@ -78,6 +81,7 @@
     results: [],
     selected: 0,
     current: -1,
+    loop: -1, // index of the repeated track in entries(), -1 when off
     open: false,
     bridgeSeen: false,
   };
@@ -149,6 +153,7 @@
     state.results = [];
     state.selected = 0;
     state.current = -1;
+    state.loop = -1;
     load(false);
   }
 
@@ -185,6 +190,7 @@
       state.error = String((e && e.message) || e);
     }
     state.current = -1;
+    state.loop = -1;
     tick();
     render();
   }
@@ -204,14 +210,17 @@
     button:hover { background: rgba(255,255,255,.16); }
     button[aria-expanded="true"] { background: #fff; color: #030303; }
     button.dim { color: rgba(255,255,255,.6); }
+    .icon { display: inline-flex; }
     svg { width: 20px; height: 20px; flex: none; fill: currentColor; }
+    button.looping:not([aria-expanded="true"]) .icon { color: #ff4e45; }
     .label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   `;
 
   const buttonHost = h('ytmtc-button');
   const buttonRoot = buttonHost.attachShadow({ mode: 'open' });
   const buttonLabel = h('span', { class: 'label' });
-  const button = h('button', { type: 'button', 'aria-expanded': 'false', onclick: togglePanel }, icon(ICONS.list), buttonLabel);
+  const buttonIcon = h('span', { class: 'icon' });
+  const button = h('button', { type: 'button', 'aria-expanded': 'false', onclick: togglePanel }, buttonIcon, buttonLabel);
   buttonRoot.append(h('style', null, STYLE_BUTTON), button);
 
   function mountButton() {
@@ -235,6 +244,12 @@
     if (buttonLabel.textContent !== text) buttonLabel.textContent = text;
     button.title = cur ? `${formatTime(cur.t)} · ${cur.title}` : t('panelTitle');
     button.classList.toggle('dim', state.status !== 'ready');
+    const iconName = state.loop >= 0 ? 'repeatOne' : 'list';
+    if (buttonIcon.dataset.name !== iconName) {
+      buttonIcon.dataset.name = iconName;
+      buttonIcon.replaceChildren(icon(ICONS[iconName]));
+    }
+    button.classList.toggle('looping', state.loop >= 0);
     button.setAttribute('aria-expanded', String(state.open));
   }
 
@@ -269,14 +284,21 @@
     .icon-btn:hover { background: rgba(255,255,255,.1); }
     .icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
     ol { flex: 1; min-height: 0; list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; overscroll-behavior: contain; }
-    li button {
-      width: 100%; display: flex; gap: 12px; align-items: baseline; text-align: left;
+    li { display: flex; align-items: center; }
+    li button.track {
+      flex: 1; min-width: 0; display: flex; gap: 12px; align-items: baseline; text-align: left;
       padding: 8px 16px; border: 0; background: transparent; color: rgba(255,255,255,.85);
       font: inherit; cursor: pointer;
     }
-    li button:hover { background: rgba(255,255,255,.08); }
-    li.past button { color: rgba(255,255,255,.5); }
-    li.current button { background: rgba(255,78,69,.16); color: #fff; font-weight: 500; box-shadow: inset 3px 0 0 #ff4e45; }
+    li:hover { background: rgba(255,255,255,.08); }
+    li.past button.track { color: rgba(255,255,255,.5); }
+    li.current { background: rgba(255,78,69,.16); box-shadow: inset 3px 0 0 #ff4e45; }
+    li.current button.track { color: #fff; font-weight: 500; }
+    li .loop { flex: none; margin-right: 8px; width: 32px; height: 32px; opacity: 0; color: rgba(255,255,255,.7); }
+    li:hover .loop, li .loop:focus-visible, li.looped .loop { opacity: 1; }
+    li.looped .loop { color: #ff4e45; background: rgba(255,78,69,.16); }
+    li .loop svg { width: 18px; height: 18px; }
+    @media (hover: none) { li .loop { opacity: 1; } }
     .time { flex: none; min-width: 56px; color: rgba(255,255,255,.6); font-variant-numeric: tabular-nums; }
     li.current .time { color: #ff4e45; }
     .msg { padding: 24px 16px; color: rgba(255,255,255,.7); text-align: center; }
@@ -334,6 +356,7 @@
         onchange: (e) => {
           state.selected = Number(e.target.value);
           state.current = -1;
+          state.loop = -1;
           tick();
           render();
         },
@@ -356,7 +379,13 @@
         h(
           'li',
           { 'data-i': String(i) },
-          h('button', { type: 'button', onclick: () => seek(e.t) }, h('span', { class: 'time' }, formatTime(e.t)), h('span', null, e.title)),
+          h(
+            'button',
+            { class: 'track', type: 'button', onclick: () => playTrack(i) },
+            h('span', { class: 'time' }, formatTime(e.t)),
+            h('span', null, e.title),
+          ),
+          h('button', { class: 'icon-btn loop', type: 'button', onclick: () => toggleLoop(i) }, icon(ICONS.repeatOne)),
         ),
       ),
     );
@@ -382,6 +411,10 @@
     for (let i = 0; i < items.length; i++) {
       items[i].classList.toggle('current', i === state.current);
       items[i].classList.toggle('past', i < state.current);
+      items[i].classList.toggle('looped', i === state.loop);
+      const loopBtn = items[i].querySelector('.loop');
+      loopBtn.setAttribute('aria-pressed', String(i === state.loop));
+      loopBtn.title = i === state.loop ? t('loopOff') : t('loopOn');
     }
     const cur = items[state.current];
     if (scroll && cur && state.open) {
@@ -390,8 +423,9 @@
         listEl.scrollTop = top - listEl.clientHeight / 3;
       }
     }
-    const e = currentEntry();
-    nowEl.textContent = e ? `▶ ${e.title}` : '';
+    const looped = entries()[state.loop];
+    const e = looped || currentEntry();
+    nowEl.textContent = e ? `${looped ? '🔁' : '▶'} ${e.title}` : '';
   }
 
   function render() {
@@ -412,15 +446,62 @@
     if (e.key === 'Escape' && state.open) togglePanel();
   });
 
-  // ---------- playback tracking
+  // ---------- playback tracking and track repeat
+
+  // Seeks issued by the loop take a moment to land; don't mistake the old
+  // position for the user jumping elsewhere.
+  let loopSeekUntil = 0;
+
+  function trackBounds(i) {
+    const list = entries();
+    const v = videoEl();
+    const duration = state.duration || (v && v.duration) || Infinity;
+    // Stop short of the very end, otherwise YouTube Music moves to the next video.
+    const end = i + 1 < list.length ? list[i + 1].t : duration - 1.5;
+    return { start: list[i].t, end };
+  }
+
+  function playTrack(i) {
+    if (state.loop >= 0 && state.loop !== i) setLoop(-1);
+    seek(entries()[i].t);
+    loopSeekUntil = Date.now() + 1500;
+  }
+
+  function setLoop(i) {
+    state.loop = i;
+    renderButton();
+    highlight(false);
+  }
+
+  function toggleLoop(i) {
+    if (state.loop === i) return setLoop(-1);
+    setLoop(i);
+    const v = videoEl();
+    const { start, end } = trackBounds(i);
+    if (!v || v.currentTime < start - 0.5 || v.currentTime >= end) playTrack(i);
+  }
+
+  function checkLoop(v) {
+    if (state.loop < 0 || !v || !entries()[state.loop]) return;
+    const { start, end } = trackBounds(state.loop);
+    const now = v.currentTime;
+    if (now >= end - 0.3 && now < end + 3) {
+      seek(start);
+      loopSeekUntil = Date.now() + 1500;
+    } else if (Date.now() > loopSeekUntil && (now < start - 1.5 || now >= end + 3)) {
+      setLoop(-1); // The user jumped elsewhere with the progress bar.
+    }
+  }
 
   function tick() {
     const v = videoEl();
+    checkLoop(v);
     const list = entries();
     let idx = -1;
     if (v && list.length) {
       const now = v.currentTime + 0.5;
       for (let i = 0; i < list.length && list[i].t <= now; i++) idx = i;
+      if (state.loop >= 0 && idx === state.loop + 1) idx = state.loop; // about to jump back
     }
     if (idx !== state.current) {
       state.current = idx;
@@ -440,6 +521,6 @@
   injectBridge();
   render();
   setInterval(poll, 1000);
-  setInterval(tick, 500);
+  setInterval(tick, 250);
   poll();
 })();

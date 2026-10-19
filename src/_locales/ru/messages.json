@@ -1,19 +1,79 @@
 {
-  "extName": { "message": "Таймкоды для YouTube Music" },
-  "extDescription": { "message": "Показывает таймкоды песен для концертов и длинных видео в YouTube Music — из описания, глав и комментариев." },
-  "buttonLabel": { "message": "Таймкоды" },
-  "panelTitle": { "message": "Таймкоды" },
-  "loading": { "message": "Ищу таймкоды…" },
-  "notFound": { "message": "Таймкоды не найдены ни в описании, ни в популярных комментариях." },
-  "noVideo": { "message": "Включите что-нибудь, чтобы увидеть таймкоды." },
-  "error": { "message": "Не удалось загрузить таймкоды: $ERR$", "placeholders": { "err": { "content": "$1" } } },
-  "retry": { "message": "Повторить" },
-  "refresh": { "message": "Обновить" },
-  "close": { "message": "Закрыть" },
-  "source": { "message": "Источник" },
-  "sourceChapters": { "message": "Главы видео" },
-  "sourceDescription": { "message": "Описание видео" },
-  "sourceComment": { "message": "Комментарий $AUTHOR$", "placeholders": { "author": { "content": "$1" } } },
-  "likes": { "message": "♥ $N$", "placeholders": { "n": { "content": "$1" } } },
-  "tracks": { "message": "треков: $N$", "placeholders": { "n": { "content": "$1" } } }
+  "extName": {
+    "message": "Таймкоды для YouTube Music"
+  },
+  "extDescription": {
+    "message": "Показывает таймкоды песен для концертов и длинных видео в YouTube Music — из описания, глав и комментариев."
+  },
+  "buttonLabel": {
+    "message": "Таймкоды"
+  },
+  "panelTitle": {
+    "message": "Таймкоды"
+  },
+  "loading": {
+    "message": "Ищу таймкоды…"
+  },
+  "notFound": {
+    "message": "Таймкоды не найдены ни в описании, ни в популярных комментариях."
+  },
+  "noVideo": {
+    "message": "Включите что-нибудь, чтобы увидеть таймкоды."
+  },
+  "error": {
+    "message": "Не удалось загрузить таймкоды: $ERR$",
+    "placeholders": {
+      "err": {
+        "content": "$1"
+      }
+    }
+  },
+  "retry": {
+    "message": "Повторить"
+  },
+  "refresh": {
+    "message": "Обновить"
+  },
+  "close": {
+    "message": "Закрыть"
+  },
+  "source": {
+    "message": "Источник"
+  },
+  "sourceChapters": {
+    "message": "Главы видео"
+  },
+  "sourceDescription": {
+    "message": "Описание видео"
+  },
+  "sourceComment": {
+    "message": "Комментарий $AUTHOR$",
+    "placeholders": {
+      "author": {
+        "content": "$1"
+      }
+    }
+  },
+  "likes": {
+    "message": "♥ $N$",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "tracks": {
+    "message": "треков: $N$",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "loopOn": {
+    "message": "Повторять этот трек"
+  },
+  "loopOff": {
+    "message": "Не повторять"
+  }
 }
