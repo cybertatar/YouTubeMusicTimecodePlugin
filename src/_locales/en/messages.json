@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "YouTube Music Timecodes"
+    "message": "Timecodes for YouTube Music"
   },
   "extDescription": {
     "message": "Shows song timecodes for concerts and long videos in YouTube Music, taken from the description, chapters and comments."

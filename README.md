@@ -108,3 +108,9 @@ npm run pack                      # zip-архивы для Chrome Web Store / A
 
 После изменений в `src/` пересоберите расширение (`npm run build`) и нажмите «Обновить»
 на странице расширений.
+
+## Публикация
+
+- Chrome Web Store: тексты карточки, ответы для вкладки Privacy и промо-картинки лежат
+  в [`store/`](store/chrome-web-store.md). Архив собирается командой `npm run pack`.
+- Политика конфиденциальности: [PRIVACY.md](PRIVACY.md).

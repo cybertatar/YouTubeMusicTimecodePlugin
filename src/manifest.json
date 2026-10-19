@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "default_locale": "en",
   "icons": {
     "16": "icons/icon16.png",
@@ -32,5 +32,6 @@
         "https://music.youtube.com/*"
       ]
     }
-  ]
+  ],
+  "homepage_url": "https://github.com/cybertatar/YouTubeMusicTimecodePlugin"
 }

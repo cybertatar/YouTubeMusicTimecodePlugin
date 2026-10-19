@@ -1,6 +1,6 @@
 {
   "name": "youtube-music-timecodes",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Browser extension that shows song timecodes for concerts in YouTube Music",
   "scripts": {
