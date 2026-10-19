@@ -89,3 +89,9 @@ test('parseCount understands short forms', () => {
   assert.equal(parseCount('2M'), 2000000);
   assert.equal(parseCount(undefined), 0);
 });
+
+test('committed userscript is up to date with src/', () => {
+  const fs = require('fs');
+  const { generateUserscript, USERSCRIPT } = require('../scripts/build.js');
+  assert.equal(fs.readFileSync(USERSCRIPT, 'utf8'), generateUserscript(), 'run `npm run build` and commit userscript/');
+});

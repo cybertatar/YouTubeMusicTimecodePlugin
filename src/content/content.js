@@ -1,12 +1,15 @@
 // Content script for music.youtube.com: adds a "Timecodes" button to the
 // player bar, shows the tracklist panel, highlights the current song and
-// seeks on click.
+// seeks on click. Also runs as a userscript (see scripts/build.js), where
+// there is no extension API and page/bridge.js is bundled in directly.
 (function () {
   'use strict';
   if (window.__ytmtcContent) return;
   window.__ytmtcContent = true;
 
   const ext = globalThis.browser || globalThis.chrome;
+  // Pages expose a bare `chrome` object too, so check for the real API.
+  const isExtension = !!(ext && ext.runtime && ext.runtime.getURL);
   const { formatTime, getTimecodes } = globalThis.YTMTC;
 
   const FALLBACKS = {
@@ -36,7 +39,10 @@
     } catch (e) {
       // Context invalidated after an extension reload.
     }
-    if (!msg) msg = (FALLBACKS[key] || key).replace(/\$(\d)/g, (_, i) => subs[i - 1] ?? '');
+    if (!msg) {
+      const bundled = globalThis.YTMTC.messages; // set by the userscript build
+      msg = ((bundled && bundled[key]) || FALLBACKS[key] || key).replace(/\$(\d)/g, (_, i) => subs[i - 1] ?? '');
+    }
     return msg;
   }
 
@@ -99,6 +105,7 @@
   // ---------- page bridge (reads player state in the page context)
 
   function injectBridge() {
+    if (!isExtension) return; // The userscript bundles the bridge itself.
     try {
       const s = document.createElement('script');
       s.src = ext.runtime.getURL('page/bridge.js');

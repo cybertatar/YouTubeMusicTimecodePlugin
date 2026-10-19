@@ -1,11 +1,14 @@
 # Таймкоды для YouTube Music
 
-Расширение для веб-версии [YouTube Music](https://music.youtube.com), которое показывает
-таймкоды песен для концертов и длинных видео. Работает в Chrome (и других браузерах на
-Chromium), Firefox и Safari.
+Показывает таймкоды песен для концертов и длинных видео в веб-версии
+[YouTube Music](https://music.youtube.com).
 
 YouTube Music не показывает описание и комментарии к видео, а именно там обычно лежит треклист.
-Расширение само находит его и показывает в отдельной панели.
+Скрипт сам находит его и показывает в отдельной панели прямо в плеере.
+
+**[⬇️ Установить скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js)**
+— но сначала прочитайте [инструкцию для вашего браузера](#установка) ниже: ссылка сработает,
+только когда в браузере уже стоит менеджер скриптов.
 
 ## Что умеет
 
@@ -34,82 +37,309 @@ YouTube Music не показывает описание и комментари
 
 ## Установка
 
-Сначала соберите расширение (нужен [Node.js](https://nodejs.org) 18+, сторонних зависимостей нет):
+Это бесплатно и занимает около 5 минут. Установка идёт в два шага:
 
-```sh
-npm run build        # соберёт dist/chrome, dist/firefox, dist/safari
-```
+1. Ставите **менеджер скриптов** — бесплатное расширение, которое запускает пользовательские
+   скрипты на сайтах:
+   - **Tampermonkey** — для Chrome, Edge, Яндекс Браузера, Opera, Brave и Firefox;
+   - **Userscripts** — для Safari, потому что Tampermonkey для Safari платный.
+2. Открываете ссылку на скрипт и нажимаете «Установить».
 
-### Chrome, Edge, Яндекс Браузер, Opera, Brave
+Дальше скрипт **обновляется сам**: ничего скачивать заново не нужно.
 
-1. Откройте `chrome://extensions` (или `edge://extensions` и т. п.).
-2. Включите «Режим разработчика».
-3. Нажмите «Загрузить распакованное расширение» и выберите папку `dist/chrome`.
+Выберите свой браузер:
+
+- [Google Chrome](#google-chrome)
+- [Яндекс Браузер](#яндекс-браузер)
+- [Microsoft Edge](#microsoft-edge)
+- [Opera](#opera)
+- [Brave, Vivaldi и другие на Chromium](#brave-vivaldi-и-другие-на-chromium)
+- [Firefox](#firefox)
+- [Safari на Mac](#safari-на-mac)
+- [Safari на iPhone и iPad](#safari-на-iphone-и-ipad)
+
+После установки переходите к разделу [«Проверка»](#проверка).
+
+---
+
+### Google Chrome
+
+**Шаг 1. Поставьте Tampermonkey.**
+
+1. Откройте страницу
+   [Tampermonkey в Chrome Web Store](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo).
+2. Нажмите **«Установить»** и подтвердите кнопкой **«Установить расширение»**.
+
+**Шаг 2. Разрешите Tampermonkey запускать скрипты.**
+
+Это обязательный шаг: в новых версиях Chrome без него скрипты не работают.
+
+1. Скопируйте в адресную строку `chrome://extensions` и нажмите Enter.
+2. Найдите карточку **Tampermonkey** и нажмите на ней **«Подробнее»**.
+3. Включите переключатель **«Разрешить пользовательские скрипты»** (Allow User Scripts).
+4. Если такого переключателя нет (Chrome старше версии 138), вернитесь на страницу
+   `chrome://extensions` и включите **«Режим разработчика»** в правом верхнем углу.
+
+**Шаг 3. Установите скрипт.**
+
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js).
+2. Откроется вкладка Tampermonkey с описанием скрипта. Нажмите **«Установить»** (Install).
+
+> Если вместо окна установки открылся текст кода, значит, Tampermonkey не видит ссылку.
+> Проверьте шаг 2 и откройте ссылку ещё раз.
+
+### Яндекс Браузер
+
+Яндекс Браузер умеет ставить расширения из Chrome Web Store.
+
+**Шаг 1. Поставьте Tampermonkey.**
+
+1. Откройте страницу
+   [Tampermonkey в Chrome Web Store](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo).
+2. Нажмите **«Установить»** и подтвердите.
+
+**Шаг 2. Разрешите запуск скриптов.**
+
+1. Скопируйте в адресную строку `browser://extensions` и нажмите Enter.
+2. Найдите карточку **Tampermonkey**, нажмите **«Подробнее»** и включите
+   **«Разрешить пользовательские скрипты»**, если такой переключатель есть.
+3. Если его нет, включите **«Режим разработчика»** в правом верхнем углу страницы расширений.
+
+**Шаг 3. Установите скрипт.**
+
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js).
+2. Нажмите **«Установить»** во вкладке Tampermonkey.
+
+### Microsoft Edge
+
+**Шаг 1. Поставьте Tampermonkey.**
+
+1. Откройте страницу
+   [Tampermonkey в магазине Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd).
+2. Нажмите **«Получить»** и подтвердите кнопкой **«Добавить расширение»**.
+
+**Шаг 2. Разрешите запуск скриптов.**
+
+1. Скопируйте в адресную строку `edge://extensions` и нажмите Enter.
+2. У **Tampermonkey** нажмите **«Сведения»** и включите **«Разрешить пользовательские скрипты»**.
+3. Если такого переключателя нет, включите **«Режим разработчика»** в левом меню страницы
+   расширений.
+
+**Шаг 3. Установите скрипт.**
+
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js).
+2. Нажмите **«Установить»**.
+
+### Opera
+
+**Шаг 1. Поставьте Tampermonkey.**
+
+1. Откройте страницу
+   [Tampermonkey в каталоге Opera](https://addons.opera.com/extensions/details/tampermonkey-beta/).
+2. Нажмите **«Добавить в Opera»**.
+
+**Шаг 2. Разрешите запуск скриптов.**
+
+1. Скопируйте в адресную строку `opera://extensions` и нажмите Enter.
+2. Включите **«Режим разработчика»** в правом верхнем углу.
+3. Если у Tampermonkey есть переключатель **«Разрешить пользовательские скрипты»**,
+   включите и его.
+
+**Шаг 3. Установите скрипт.**
+
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js).
+2. Нажмите **«Установить»**.
+
+### Brave, Vivaldi и другие на Chromium
+
+Делайте всё так же, как [для Google Chrome](#google-chrome). Отличается только адрес
+страницы расширений: `brave://extensions`, `vivaldi:extensions` и т. п.
 
 ### Firefox
 
-**Временно (до перезапуска браузера):**
+**Шаг 1. Поставьте Tampermonkey.**
 
-1. Откройте `about:debugging#/runtime/this-firefox`.
-2. Нажмите «Загрузить временное дополнение» и выберите `dist/firefox/manifest.json`.
+1. Откройте страницу
+   [Tampermonkey на addons.mozilla.org](https://addons.mozilla.org/firefox/addon/tampermonkey/).
+2. Нажмите **«Добавить в Firefox»**, затем **«Добавить»** в появившемся окне.
 
-**Постоянно:**
+Других настроек в Firefox не нужно.
 
-1. Соберите архив командой `npm run pack`.
-2. Загрузите `dist/ytm-timecodes-firefox-*.zip` на [addons.mozilla.org](https://addons.mozilla.org/developers/)
-   как «unlisted» — Mozilla подпишет его для личного использования.
+**Шаг 2. Установите скрипт.**
 
-Если Firefox спросит доступ к music.youtube.com, разрешите его. Его же можно выдать позже
-в меню расширения: «Управление» → «Разрешения».
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js).
+2. Нажмите **«Установить»**.
 
-### Safari (macOS)
+> Вместо Tampermonkey можно использовать бесплатный и открытый
+> [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/). Скрипт работает
+> в обоих, а установка выглядит так же.
 
-В Safari расширения ставятся только как часть приложения, поэтому нужен Xcode.
+### Safari на Mac
 
-1. Сконвертируйте расширение:
-   ```sh
-   xcrun safari-web-extension-converter dist/safari --app-name "YTM Timecodes" --macos-only
-   ```
-2. Xcode откроет проект. Нажмите ▶ Run — соберётся и запустится приложение-обёртка.
-3. В Safari: «Настройки» → «Дополнения» → включите «YTM Timecodes».
-   - Без платного аккаунта разработчика сначала включите
-     «Разработка» → «Разрешить неподписанные расширения». Этот флаг сбрасывается
-     при перезапуске Safari.
-4. В том же разделе разрешите расширению доступ к `music.youtube.com`.
+Tampermonkey для Safari платный, поэтому здесь используется бесплатное приложение **Userscripts**.
 
-## Как это устроено
+**Шаг 1. Поставьте Userscripts.**
+
+1. Откройте [Userscripts в Mac App Store](https://apps.apple.com/app/userscripts/id1463298887)
+   и нажмите **«Загрузить»**.
+2. Запустите приложение **Userscripts** один раз (через Launchpad или папку «Программы»).
+   Оно покажет папку для скриптов. Можно оставить её как есть и закрыть окно.
+
+**Шаг 2. Включите Userscripts в Safari.**
+
+1. Откройте Safari → меню **Safari** → **Настройки…** → вкладка **Расширения**.
+2. Поставьте галочку напротив **Userscripts**.
+3. Справа нажмите **«Изменить веб-сайты…»** и для **music.youtube.com** и
+   **raw.githubusercontent.com** выберите **«Разрешить»**. Проще всего выбрать
+   **«Разрешить» для всех сайтов**: Userscripts сам запускает скрипты только там,
+   где им положено.
+
+**Шаг 3. Установите скрипт.**
+
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js)
+   в Safari. Откроется страница с кодом, так и должно быть.
+2. Нажмите на значок **Userscripts** (`</>`) на панели Safari слева от адресной строки.
+3. В окошке появится **«Userscript Detected»**. Нажмите на него, затем **«Install»**.
+
+### Safari на iPhone и iPad
+
+**Шаг 1. Поставьте Userscripts.**
+
+1. Установите [Userscripts из App Store](https://apps.apple.com/app/userscripts/id1463298887).
+2. Откройте приложение и нажмите **«Set Userscripts Directory»** / **«Change»**. Выберите
+   любую папку в «Файлах», например создайте папку `Userscripts` в «На iPhone».
+
+**Шаг 2. Включите Userscripts в Safari.**
+
+1. Откройте **Настройки** → **Приложения** → **Safari** → **Расширения** → **Userscripts**.
+   На старых iOS путь такой: **Настройки** → **Safari** → **Расширения**.
+2. Включите **«Разрешить расширение»**.
+3. Ниже, в разделе разрешений, выберите **«Все веб-сайты»** → **«Разрешить»**.
+
+**Шаг 3. Установите скрипт.**
+
+1. Откройте
+   [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js)
+   в Safari.
+2. Нажмите на кнопку **«aA»** (или на значок пазла) в адресной строке → **Userscripts**.
+3. Нажмите **«Userscript Detected»** → **«Install»**.
+
+> На телефоне music.youtube.com выглядит иначе, чем на компьютере. Мобильная версия пока
+> не проверялась: если кнопка не встроится в плеер, она появится плавающей в правом
+> нижнем углу экрана.
+
+---
+
+## Проверка
+
+1. Откройте [music.youtube.com](https://music.youtube.com). Если вкладка уже была открыта,
+   обновите её (F5 или ⌘R).
+2. Включите любой концерт, например
+   [Sade — Bring Me Home](https://music.youtube.com/watch?v=HpO0kzqAjkM) или
+   [Metallica — Live at the Sphere](https://music.youtube.com/watch?v=BC3zbxM2CHo).
+3. Справа в нижней панели плеера появится кнопка **«Таймкоды»**. Через пару секунд на ней
+   будет название текущей песни.
+4. Нажмите на кнопку, и откроется список песен. Клик по песне перематывает на неё,
+   кнопка 🔁 ставит песню на повтор.
+
+## Обновление
+
+Обновления ставятся сами:
+- Tampermonkey проверяет их раз в сутки;
+- в Userscripts нажмите на значок расширения и выберите проверку обновлений.
+
+Чтобы обновиться сразу, откройте [ссылку на скрипт](https://raw.githubusercontent.com/cybertatar/YouTubeMusicTimecodePlugin/main/userscript/ytm-timecodes.user.js)
+ещё раз и нажмите **«Обновить»** / **«Install»**.
+
+## Удаление
+
+- **Tampermonkey:** значок Tampermonkey → **«Панель управления»** → значок корзины
+  напротив «Таймкоды для YouTube Music».
+- **Userscripts:** значок Userscripts → у скрипта нажмите на значок корзины.
+  Или удалите файл скрипта из папки Userscripts.
+
+## Если что-то не работает
+
+| Что происходит | Что сделать |
+| --- | --- |
+| По ссылке на скрипт открывается текст кода, а не окно установки | Менеджер скриптов не установлен или выключен. В Chrome, Edge, Яндексе и Opera проверьте шаг 2 («Разрешить пользовательские скрипты» или «Режим разработчика»). В Safari нажмите на значок Userscripts, как описано в шаге 3. |
+| Кнопки «Таймкоды» нет в плеере | Обновите страницу music.youtube.com. Нажмите на значок Tampermonkey: в списке для этого сайта должен быть скрипт «Таймкоды для YouTube Music» с включённым переключателем. В Chrome, Edge, Яндексе и Opera ещё раз проверьте шаг 2. |
+| Панель пишет «Таймкоды не найдены» | У этого видео нет треклиста ни в описании, ни в популярных комментариях. Скрипт показывает только то, что уже написали люди. |
+| «Не удалось загрузить таймкоды» | Нажмите «Повторить». Если ошибка повторяется, создайте [issue](https://github.com/cybertatar/YouTubeMusicTimecodePlugin/issues) со ссылкой на видео. |
+| Таймкоды распознались криво | Создайте [issue](https://github.com/cybertatar/YouTubeMusicTimecodePlugin/issues) со ссылкой на видео. |
+
+---
+
+## Для разработчиков
+
+### Установка как расширение
+
+Скрипт можно поставить и как обычное браузерное расширение, без менеджера скриптов.
+Для Chrome и Firefox ничего собирать не нужно: папка `src` уже является готовым расширением.
+
+- **Chrome и другие на Chromium:** `chrome://extensions` → «Режим разработчика» →
+  «Загрузить распакованное расширение» → папка `src`.
+- **Firefox (до перезапуска браузера):** `about:debugging#/runtime/this-firefox` →
+  «Загрузить временное дополнение» → `src/manifest.json`.
+- **Safari (нужен Xcode):**
+  1. Соберите версию под Safari: `npm run build`.
+  2. Сконвертируйте её командой
+     `xcrun safari-web-extension-converter dist/safari --app-name "YTM Timecodes" --macos-only`.
+  3. В открывшемся Xcode нажмите ▶ Run.
+  4. В Safari: «Настройки» → «Дополнения» → включите «YTM Timecodes».
+     - Без платного аккаунта разработчика сначала включите
+       «Разработка» → «Разрешить неподписанные расширения».
+
+### Как это устроено
 
 ```
 src/
   manifest.json        общий манифест (MV3); scripts/build.js дописывает отличия под браузеры
-  content/content.js   кнопка, панель, подсветка текущего трека, перемотка
+  content/content.js   кнопка, панель, подсветка текущего трека, перемотка, повтор
   page/bridge.js       выполняется в контексте страницы: читает ID видео из плеера и вызывает seekTo
   lib/innertube.js     запросы к внутреннему API YouTube (описание, главы, комментарии)
   lib/timecodes.js     поиск таймкодов в тексте и выбор лучшего треклиста
   _locales/{ru,en}     переводы интерфейса
+userscript/
+  ytm-timecodes.user.js  сборка для Tampermonkey/Userscripts (генерируется, руками не править)
 ```
 
+- **Userscript.** Это те же файлы из `src/`, склеенные в один файл вместе с переводами.
+  Скрипт работает в обоих режимах менеджеров:
+  - в контексте страницы — так запускает Tampermonkey;
+  - в изолированной песочнице — так может запускать Userscripts в Safari. Тогда ID видео
+    берётся из адреса страницы, а перемотка идёт напрямую через `<video>`.
 - **Запросы к API.** Данные берутся из того же внутреннего API (`/youtubei/v1/next`), которым
   пользуется youtube.com. Запросы идут с `music.youtube.com` на тот же домен: запросы
   с Origin расширения YouTube отклоняет (HTTP 403), поэтому фонового скрипта нет.
-- **Только публичные данные.** Запросы анонимные, куки не отправляются. Расширению не нужны
-  никакие разрешения, кроме доступа к music.youtube.com.
+- **Только публичные данные.** Запросы анонимные, куки не отправляются.
 - **Без внутренних элементов YouTube.** Кнопка и панель живут в собственном Shadow DOM
   и не трогают внутренние компоненты YouTube Music. Если YouTube поменяет вёрстку
   и контейнер для кнопки пропадёт, кнопка станет плавающей в правом нижнем углу.
 
-## Разработка
+### Команды
 
 ```sh
-npm test                          # юнит-тесты парсера (node:test)
+npm run build                     # dist/{chrome,firefox,safari} + userscript/ytm-timecodes.user.js
+npm test                          # юнит-тесты; заодно проверяет, что userscript пересобран
 npm run probe -- <videoId> [sec]  # прогнать поиск таймкодов для реального видео из терминала
-npm run pack                      # zip-архивы для Chrome Web Store / AMO
+npm run pack                      # zip-архивы для магазинов расширений
 ```
 
-После изменений в `src/` пересоберите расширение (`npm run build`) и нажмите «Обновить»
-на странице расширений.
+**Выпуск новой версии:**
+1. Увеличьте `version` в `src/manifest.json`.
+2. Выполните `npm run build`.
+3. Закоммитьте изменения вместе с `userscript/` в `main`.
 
-## Публикация
+Менеджеры скриптов увидят новую версию и обновят скрипт у всех пользователей.
+
+### Публикация в магазинах
 
 - Chrome Web Store: тексты карточки, ответы для вкладки Privacy и промо-картинки лежат
   в [`store/`](store/chrome-web-store.md). Архив собирается командой `npm run pack`.
